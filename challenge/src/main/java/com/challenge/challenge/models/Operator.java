@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -28,13 +29,17 @@ public class Operator {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotEmpty(message = "Name cannot be Empty")
     private String name;
 
+    @NotEmpty(message = "Surname cannot be empty")
     private String surname;
 
+    @NotEmpty(message = "Username cannot be empty")
     @Column(unique = true)
     private String userName;
 
+    @NotEmpty(message = "Password cannot be empty")
     private String password;
 
     private int status;
