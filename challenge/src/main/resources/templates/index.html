@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -18,8 +19,10 @@
 
 <body>
     <nav class="bg-secondary nav d-flex justify-content-around">
-        <a class="nav-link active text-white" aria-current="page" href="#">Your Profile</a>
-        <a class="nav-link active text-white" aria-current="page" href="#">Logout</a>
+        <b class="mt-2 mb-2" sec:authentication="name"></span></b>
+        <form th:action="@{/logout}" method="POST">
+            <input class="btn btn-primary btn-block mt-2 mb-2" type="submit" value="Sign Out">
+        </form>
     </nav>
 </body>
 

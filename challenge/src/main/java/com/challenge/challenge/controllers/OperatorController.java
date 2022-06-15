@@ -5,6 +5,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -25,10 +27,11 @@ public class OperatorController {
     private OperatorService oS;
 
     @GetMapping("/list")
-    public String listAll(Model model){
+    public String listAll(Model model, @AuthenticationPrincipal User user){
 
         List<Operator> operators = oS.findAll();
 
+        model.addAttribute("user", user);
         model.addAttribute("operators", operators);
         return "index";
     }

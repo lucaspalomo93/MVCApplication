@@ -29,32 +29,31 @@
         </div>
 
 
-        <form>
+        <form th:action="@{/login}" method="POST">
             <!-- Email input -->
             <div class="form-outline mb-4">
                 <label class="form-label" for="username">Username</label>
-                <input type="text" id="username" class="form-control" placeholder="Write Your Username" />
+                <input type="text" id="username" name="username" class="form-control" placeholder="Write Your Username" />
 
             </div>
 
             <!-- Password input -->
             <div class="form-outline mb-4">
                 <label class="form-label" for="password">Password</label>
-                <input type="password" id="password" class="form-control" placeholder="Write Your Password" />
+                <input name="password" type="password" id="password" class="form-control" placeholder="Write Your Password" />
 
             </div>
 
             <!-- Submit button -->
             <div class="d-flex justify-content-center">
-                <button type="button" class="btn btn-primary btn-block mb-4">Sign in</button>
-            </div>
-
-
-            <!-- Register buttons -->
-            <div class="text-center">
-                <p>Not a member? <a href="/front/register.html">Register</a></p>
+                <button type="submit" class="btn">Login</button>
             </div>
         </form>
+
+        <!-- Register buttons -->
+        <div class="text-center">
+            <p>Not a member? <a th:href="@{/operator/register}">Register</a></p>
+        </div>
     </div>
 
 

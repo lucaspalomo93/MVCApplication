@@ -1,12 +1,16 @@
 package com.challenge.challenge.models;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -52,5 +56,9 @@ public class Operator {
     @Column(name = "last_login_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastLoginDate;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_usuario")
+    private List<Role> roles;
 
 }
