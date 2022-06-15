@@ -2,9 +2,12 @@ package com.challenge.challenge.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,7 +42,10 @@ public class OperatorController {
     }
 
     @PostMapping("/save")
-    public String save(Operator operator){
+    public String save(@Valid Operator operator, Errors errors){
+        if(errors.hasErrors()){
+            return "/register";
+        }
         oS.save(operator);
         return "redirect:/operator/list";
     }
@@ -53,9 +59,12 @@ public class OperatorController {
     }
 
     @PostMapping("/update")
-    public String update(Operator operator){
-        oS.update(operator.getId(), operator);
+    public String update(@Valid Operator operator, Errors errors){
+        if(errors.hasErrors()){
+            return "edit";
+        }
 
+        oS.update(operator.getId(), operator);
         return "redirect:/operator/list";
     }
     
