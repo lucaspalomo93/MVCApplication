@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -18,8 +19,10 @@
 
 <body>
     <nav class="bg-secondary nav d-flex justify-content-around">
-        <a class="nav-link active text-white" aria-current="page" href="#">Your Profile</a>
-        <a class="nav-link active text-white" aria-current="page" href="#">Logout</a>
+        <b class="mt-2 mb-2" sec:authentication="name"></span></b>
+        <form th:action="@{/logout}" method="POST">
+            <input class="btn btn-primary btn-block mt-2 mb-2" type="submit" value="Sign Out">
+        </form>
     </nav>
 </body>
 
@@ -33,20 +36,27 @@
                 <th scope="col">Username</th>
                 <th scope="col">Status</th>
                 <th scope="col">Creation Date</th>
-                <th>Edit</th>
-                <th>Delete</th>
+                <th scope="col">Last Login Date</th>
+                <th sec:authorize="hasRole('ROLE_ADMIN')">Edit</th>
+                <th sec:authorize="hasRole('ROLE_ADMIN')">Delete</th>
+                <th>Upgrade</th>
+                <th sec:authorize="hasRole('ROLE_ADMIN')">Demote</th>
             </tr>
         </thead>
         <tbody>
             <tr th:each="operator : ${operators}">
+                <!-- <td><a class="text-decoration-none" th:text="${operator.name}" th:href="@{/operator/edit} + '/' + ${operator.id}"></a ></td></td>-->   
                 <td th:text="${operator.name}"></td>
                 <td th:text="${operator.surname}"></td>
                 <td th:text="${operator.userName}"></td>
                 <td th:if="${operator.status == 1}" th:text="Active"></td>
                 <td th:if="${operator.status == 0}" th:text="Inactive"></td>
-                <td th:text="${operator.creationDate}"></td>
-                <td><button class="btn btn-warning" ><a class="text-decoration-none text-dark font-weight-bold" th:href="@{/operator/edit} + '/' + ${operator.id}">Edit</a></button></td>
-                <td><button class="btn btn-danger"><a class="text-decoration-none text-dark font-weight-bold" th:href="@{/operator/delete/} + ${operator.id}">Delete</a></button></td>
+                <td th:text="${#dates.format(operator.creationDate, 'dd/MM/yyyy HH:mm')}"></td>
+                <td th:text="${#dates.format(operator.lastLoginDate, 'dd/MM/yyyy HH:mm')}"></td>
+                <td sec:authorize="hasRole('ROLE_ADMIN')"><a class="btn btn-warning text-decoration-none text-dark font-weight-bold" th:href="@{/operator/edit} + '/' + ${operator.id}">Edit</a></td>
+                <td sec:authorize="hasRole('ROLE_ADMIN')"><a class="btn btn-danger text-decoration-none text-dark font-weight-bold" th:href="@{/operator/delete/} + ${operator.id}">Delete</a></td>
+                <td><a class="btn btn-success text-decoration-none text-dark font-weight-bold" th:href="@{/operator/upgrade/} + ${operator.id}">Upgrade</a></td>
+                <td sec:authorize="hasRole('ROLE_ADMIN')"><a class="btn btn-secondary text-decoration-none text-dark font-weight-bold" th:href="@{/operator/demote/} + ${operator.id}">Demote</a></td>
             </tr>
         </tbody>
     </table>
