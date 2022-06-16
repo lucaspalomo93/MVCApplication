@@ -17,6 +17,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -51,14 +52,16 @@ public class Operator {
     @Column(name = "creation_date")
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
+    @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private Date creationDate = new Date(System.currentTimeMillis());
 
     @Column(name = "last_login_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastLoginDate;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_usuario")
+    @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private List<Role> roles;
 
 }

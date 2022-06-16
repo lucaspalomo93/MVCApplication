@@ -22,12 +22,12 @@ import com.challenge.challenge.models.repositories.IOperatorRepository;
 public class UserService implements UserDetailsService{
 
     @Autowired
-    private IOperatorRepository oR;
+    private IOperatorRepository operatorRepository;
 
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-       Operator operator = oR.findByUserName(username);
+       Operator operator = operatorRepository.findByUserName(username);
 
        if(operator == null){
         throw new UsernameNotFoundException(username);

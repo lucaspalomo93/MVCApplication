@@ -18,58 +18,65 @@ import com.challenge.challenge.models.Role;
 public class OperatorService {
 
     @Autowired
-    private PasswordEncoder pE;
+    private PasswordEncoder passwordEncoder;
     
     @Autowired
-    private IOperatorRepository oR;
+    private IOperatorRepository operatorRepository;
+
 
     @Autowired
-    private IRoleRepository rR;
+    private IRoleRepository roleRepository;
 
     public List<Operator> findAll(){
-        return oR.findAll();
+        return operatorRepository.findAll();
     }
 
     public Optional<Operator> findById(Long id){
-        if(oR.existsById(id)){
-            return oR.findById(id);
+        if(operatorRepository.existsById(id)){
+            return operatorRepository.findById(id);
         }
         return null;
     }
 
     public Operator save(Operator operator){
 
-        Role role = new Role();
-        role.setName("ROLE_USER");
 
-        rR.save(role);
-
-        List<Role> roles = new ArrayList<>();
-        roles.add(role);
 
         if(operator != null){
-            if(!oR.existsByUserName(operator.getUserName())){
+            if(!operatorRepository.existsByUserName(operator.getUserName())){
                 operator.setCreationDate(new Date(System.currentTimeMillis()));
                 operator.setStatus(1);
-                operator.setPassword(pE.encode(operator.getPassword()));
+                operator.setPassword(passwordEncoder.encode(operator.getPassword()));
+
+
+                Role role = new Role();
+                role.setName("ROLE_USER");
+        
+                roleRepository.save(role);
+        
+                List<Role> roles = new ArrayList<>();
+                roles.add(role);
+
                 operator.setRoles(roles);
-                return oR.save(operator);
+
+                operatorRepository.save(operator);
+                return operator;
             }
         }
         return null;
     }
 
     public Operator update(Long id, Operator operator){
-        if(oR.existsById(id)){
-            Operator oldOp = oR.findById(id).get();
-
+        if(operatorRepository.existsById(id)){
+            Operator oldOp = operatorRepository.findById(id).get();
+            System.out.println(oldOp);
             oldOp.setName(operator.getName());
             oldOp.setSurname(operator.getSurname());
             oldOp.setUserName(operator.getUserName());
-            oldOp.setPassword(pE.encode(operator.getPassword()));
+            oldOp.setPassword(passwordEncoder.encode(operator.getPassword()));
             oldOp.setStatus(operator.getStatus());
-
-            oR.save(oldOp);
+            oldOp.setLastLoginDate(oldOp.getLastLoginDate());
+            operatorRepository.save(oldOp);
             return oldOp;
         }
         
@@ -77,17 +84,104 @@ public class OperatorService {
     }
 
     public boolean deleteById(Long id){
-        if(oR.existsById(id)){
-            oR.deleteById(id);
+        if(operatorRepository.existsById(id)){
+            Operator op = operatorRepository.findById(id).get();
+
+            List<Role> roles = op.getRoles();
+
+            roles.forEach(role ->{
+                roleRepository.delete(role);
+            });
+
+            operatorRepository.deleteById(id);
             return true;
         }
         return false;
     }
 
     public Operator findByusername(String username){
-        if(oR.existsByUserName(username)){
-            return oR.findByUserName(username);
+        if(operatorRepository.existsByUserName(username)){
+            return operatorRepository.findByUserName(username);
         }
+        return null;
+    }
+
+    public Operator updateLastLoginDate(Operator operator){
+        if(operatorRepository.existsById(operator.getId())){
+            Operator oldOp = operatorRepository.findById(operator.getId()).get();
+
+            oldOp.setName(operator.getName());
+            oldOp.setSurname(operator.getSurname());
+            oldOp.setUserName(operator.getUserName());
+            oldOp.setPassword((operator.getPassword()));
+            oldOp.setStatus(operator.getStatus());
+            oldOp.setLastLoginDate(new Date(System.currentTimeMillis()));
+
+            operatorRepository.save(oldOp);
+            return oldOp;
+        }
+        return null;
+    }
+
+    public Operator upgrade(Long id){
+        
+        boolean flag = false;
+
+        Operator oldOp = operatorRepository.findById(id).get();
+
+        oldOp.setName(oldOp.getName());
+        oldOp.setSurname(oldOp.getSurname());
+        oldOp.setUserName(oldOp.getUserName());
+        oldOp.setPassword((oldOp.getPassword()));
+        oldOp.setStatus(oldOp.getStatus());
+        oldOp.setLastLoginDate(oldOp.getLastLoginDate());
+
+
+        List<Role> roles = oldOp.getRoles();
+
+        for(Role role : oldOp.getRoles()){
+            if(role.getName().toString().equals("ROLE_ADMIN")){
+                flag = true;
+            }
+        }
+
+        if(!flag){
+            Role role = new Role();
+            role.setName("ROLE_ADMIN");
+            roleRepository.save(role);
+
+            roles.add(role);
+
+            oldOp.setRoles(roles);
+
+            operatorRepository.save(oldOp);
+
+            return oldOp;
+        }
+
+        return null;
+    }
+
+    public Operator demote(Long id){
+
+
+        Operator oldOp = operatorRepository.findById(id).get();
+
+        oldOp.setName(oldOp.getName());
+        oldOp.setSurname(oldOp.getSurname());
+        oldOp.setUserName(oldOp.getUserName());
+        oldOp.setPassword((oldOp.getPassword()));
+        oldOp.setStatus(oldOp.getStatus());
+        oldOp.setLastLoginDate(oldOp.getLastLoginDate());
+
+
+        for(Role role : oldOp.getRoles()){
+            if(role.getName().toString().equals("ROLE_ADMIN")){
+                roleRepository.delete(role);
+                return oldOp;
+            }
+        }
+
         return null;
     }
     

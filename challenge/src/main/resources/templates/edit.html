@@ -75,13 +75,20 @@
     </div>
 
     <div class="d-flex justify-content-center">
-        <input type="submit" class="btn btn-primary btn-block mb-4" name="save" value="Confirm Changes">
+        <a class="btn btn-success text-decoration-none text-dark font-weight-bold mb-4" th:href="@{/operator/upgrade/} + ${operator.id}">Upgrade</a>
+    </div>
+
+    <div class="d-flex justify-content-center">
+        <input type="submit" class="btn btn-primary btn-block mb-3" name="save" value="Confirm Changes">
     </div>
 
     </form>
     <div class="text-center">
         <a th:href="@{/operator/list}">Go Back</a>
     </div>
+
+
+
     </div>
 </body>
 
