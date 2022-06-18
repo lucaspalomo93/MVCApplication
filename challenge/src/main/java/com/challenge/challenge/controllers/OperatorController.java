@@ -38,7 +38,7 @@ public class OperatorController {
     private DisplayService displayService;
 
 
-    @GetMapping("/list")
+    @GetMapping({"/list","/"})
     public String listAll(Model model, @AuthenticationPrincipal User user){
 
         List<Operator> allOperators = operatorService.findAll();

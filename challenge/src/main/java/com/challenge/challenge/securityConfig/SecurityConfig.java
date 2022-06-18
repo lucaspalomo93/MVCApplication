@@ -41,7 +41,7 @@ public class SecurityConfig{
                 .hasAnyRole("ADMIN","SUPER_ADMIN")
             .antMatchers("/operator/edit/**")
                 .hasAnyRole("ADMIN","SUPER_ADMIN","USER")
-            .antMatchers("/operator/list")
+            .antMatchers("/operator/list","/")
                 .hasAnyRole("USER","ADMIN","SUPER_ADMIN")
             .and()
                 .formLogin()
