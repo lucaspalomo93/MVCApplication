@@ -47,6 +47,8 @@ public class OperatorService {
                 operator.setCreationDate(new Date(System.currentTimeMillis()));
                 operator.setStatus(1);
                 operator.setPassword(passwordEncoder.encode(operator.getPassword()));
+                operator.setName(operator.getName().substring(0, 1).toUpperCase() + operator.getName().substring(1));
+                operator.setSurname(operator.getSurname().substring(0, 1).toUpperCase() + operator.getSurname().substring(1));
 
 
                 Role role = new Role();
@@ -69,7 +71,6 @@ public class OperatorService {
     public Operator update(Long id, Operator operator){
         if(operatorRepository.existsById(id)){
             Operator oldOp = operatorRepository.findById(id).get();
-            System.out.println(oldOp);
             oldOp.setName(operator.getName());
             oldOp.setSurname(operator.getSurname());
             oldOp.setUserName(operator.getUserName());
@@ -183,6 +184,23 @@ public class OperatorService {
         }
 
         return null;
+    }
+
+    public boolean checkRole(Operator operator, String roleName){
+
+        boolean flag = false;
+        for(Role role : operator.getRoles()){
+            if(role.getName().toString().equals(roleName)){
+                flag= true;
+            }
+        }
+
+        if(flag){
+            return true;
+
+        }else{
+            return false;
+        }
     }
     
 }
