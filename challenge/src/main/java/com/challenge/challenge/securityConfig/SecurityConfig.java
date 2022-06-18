@@ -6,13 +6,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter{
+public class SecurityConfig{
     
     @Autowired
     private UserDetailsService uS;
@@ -30,8 +30,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         return new CustomSuccessHandler();
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception{
+    @Bean
+    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
             .cors()
             .and()
@@ -50,5 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 //.defaultSuccessUrl("/operator/list")
                 .successHandler(successHandler());
             ;
+
+        return http.build();
     }
 }
