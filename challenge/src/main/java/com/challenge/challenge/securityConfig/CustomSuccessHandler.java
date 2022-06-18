@@ -13,9 +13,8 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import com.challenge.challenge.controllers.services.OperatorService;
 import com.challenge.challenge.models.Operator;
 
-public class CustomSuccessHandler implements AuthenticationSuccessHandler{
+public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 
-            
     @Autowired
     private OperatorService oService;
 
@@ -23,11 +22,17 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler{
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
 
-            String username = authentication.getName();
-            Operator op = oService.findByusername(username);
-            oService.updateLastLoginDate(op);
+        /*
+         * Get the Operator by Username.
+         * Call the service that updates the Login Date.
+         * Finally, we redirect to the Home Page
+         */
 
-            response.sendRedirect("/operator/list");        
+        String username = authentication.getName();
+        Operator op = oService.findByusername(username);
+        oService.updateLastLoginDate(op);
+
+        response.sendRedirect("/operator/list");
     }
-    
+
 }

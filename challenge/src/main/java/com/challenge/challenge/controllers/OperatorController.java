@@ -1,6 +1,5 @@
 package com.challenge.challenge.controllers;
 
-
 import java.util.List;
 
 import javax.validation.Valid;
@@ -22,48 +21,38 @@ import com.challenge.challenge.controllers.services.OperatorService;
 
 import com.challenge.challenge.models.Operator;
 
-
-
-
-
-
 @Controller
 @RequestMapping("/operator")
 public class OperatorController {
-    
+
     @Autowired
     private OperatorService operatorService;
 
     @Autowired
     private DisplayService displayService;
 
-
-    @GetMapping({"/list","/"})
-    public String listAll(Model model, @AuthenticationPrincipal User user){
+    @GetMapping({ "/list", "/" })
+    public String listAll(Model model, @AuthenticationPrincipal User user) {
 
         List<Operator> allOperators = operatorService.findAll();
 
-  
-
         List<Operator> operators = displayService.showAllWithoutSuperAdmin(allOperators);
-        
 
         model.addAttribute("user", user);
         model.addAttribute("operators", operators);
         return "index";
     }
 
-
     @GetMapping("/register")
-    public String register(Operator operator, Model model){
+    public String register(Operator operator, Model model) {
 
         model.addAttribute("operator", operator);
         return "register";
     }
 
     @PostMapping("/save")
-    public String save(@Valid Operator operator, Errors errors, RedirectAttributes redirectAttributes){
-        if(errors.hasErrors()){
+    public String save(@Valid Operator operator, Errors errors, RedirectAttributes redirectAttributes) {
+        if (errors.hasErrors()) {
             return "/register";
         }
         operatorService.save(operator);
@@ -72,7 +61,7 @@ public class OperatorController {
     }
 
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable Long id, Model model, Operator operator){
+    public String edit(@PathVariable Long id, Model model, Operator operator) {
 
         operator = operatorService.findById(id).get();
         model.addAttribute("operator", operator);
@@ -80,8 +69,8 @@ public class OperatorController {
     }
 
     @PostMapping("/update")
-    public String update(@Valid Operator operator, Errors errors, RedirectAttributes redirectAttributes){
-        if(errors.hasErrors()){
+    public String update(@Valid Operator operator, Errors errors, RedirectAttributes redirectAttributes) {
+        if (errors.hasErrors()) {
             return "edit";
         }
 
@@ -89,40 +78,40 @@ public class OperatorController {
         operatorService.update(operator.getId(), operator);
         return "redirect:/operator/list";
     }
-    
+
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes){
+    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         Operator op = operatorService.findById(id).get();
-        
+
         redirectAttributes.addFlashAttribute("deletedUser", op.getUserName());
         operatorService.deleteById(id);
         return "redirect:/operator/list";
     }
 
     @GetMapping("/upgrade/{id}")
-    public String upgrade(@PathVariable Long id, RedirectAttributes redirectAttributes){
+    public String upgrade(@PathVariable Long id, RedirectAttributes redirectAttributes) {
 
         Operator op = operatorService.findById(id).get();
         String username = op.getUserName();
 
-        if(operatorService.checkRole(op, "ROLE_ADMIN")){
+        if (operatorService.checkRole(op, "ROLE_ADMIN")) {
             redirectAttributes.addFlashAttribute("alreadyUpgraded", username);
-        }else{
+        } else {
             redirectAttributes.addFlashAttribute("upgraded", username);
         }
 
         operatorService.upgrade(id);
- 
+
         return "redirect:/operator/list";
     }
 
     @GetMapping("/demote/{id}")
-    public String downgrade(@PathVariable Long id, RedirectAttributes redirectAttributes){
+    public String downgrade(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         Operator op = operatorService.findById(id).get();
 
-        if(operatorService.checkRole(op, "ROLE_ADMIN")){
+        if (operatorService.checkRole(op, "ROLE_ADMIN")) {
             redirectAttributes.addFlashAttribute("demoted", op.getUserName());
-        }else{
+        } else {
             redirectAttributes.addFlashAttribute("alreadyDemoted", op.getUserName());
         }
 

@@ -18,8 +18,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "roles")
-public class Role implements Serializable{
-    
+public class Role implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id

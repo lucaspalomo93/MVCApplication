@@ -30,17 +30,17 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "operators")
 public class Operator {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotEmpty(message = "Name cannot be Empty")
-    @Pattern(regexp="^[A-Za-z]*$",message = "Cannot contain numbers")
+    @Pattern(regexp = "^[A-Za-z]*$", message = "Cannot contain numbers")
     private String name;
 
     @NotEmpty(message = "Surname cannot be empty")
-    @Pattern(regexp="^[A-Za-z]*$",message = "Cannot contain numbers")
+    @Pattern(regexp = "^[A-Za-z]*$", message = "Cannot contain numbers")
     private String surname;
 
     @NotEmpty(message = "Username cannot be empty")

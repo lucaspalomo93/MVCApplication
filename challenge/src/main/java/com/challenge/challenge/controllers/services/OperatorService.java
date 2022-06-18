@@ -17,45 +17,54 @@ import com.challenge.challenge.models.Role;
 @Service
 public class OperatorService {
 
+    // *************** AUTOWIREDS *******************//
     @Autowired
     private PasswordEncoder passwordEncoder;
-    
+
     @Autowired
     private IOperatorRepository operatorRepository;
-
 
     @Autowired
     private IRoleRepository roleRepository;
 
-    public List<Operator> findAll(){
+    // ************ FIND ALL OPERATORS***********//
+    public List<Operator> findAll() {
         return operatorRepository.findAll();
     }
 
-    public Optional<Operator> findById(Long id){
-        if(operatorRepository.existsById(id)){
+    // ************ FIND OPERATOR BY ID ***********//
+    public Optional<Operator> findById(Long id) {
+        if (operatorRepository.existsById(id)) {
             return operatorRepository.findById(id);
         }
         return null;
     }
 
-    public Operator save(Operator operator){
+    // ************ SAVE OPERATOR ***********//
+    public Operator save(Operator operator) {
 
-
-
-        if(operator != null){
-            if(!operatorRepository.existsByUserName(operator.getUserName())){
+        /*
+         * If the operator is not null:
+         * Set the Creation Date, Set the Status to 1, Encode the password and
+         * Capitalize the name and surname.
+         * Then create a new Role, and save that role in a list. Set the list of roles
+         * of the Operator.
+         * Finally, save the new operator.
+         */
+        if (operator != null) {
+            if (!operatorRepository.existsByUserName(operator.getUserName())) {
                 operator.setCreationDate(new Date(System.currentTimeMillis()));
                 operator.setStatus(1);
                 operator.setPassword(passwordEncoder.encode(operator.getPassword()));
                 operator.setName(operator.getName().substring(0, 1).toUpperCase() + operator.getName().substring(1));
-                operator.setSurname(operator.getSurname().substring(0, 1).toUpperCase() + operator.getSurname().substring(1));
-
+                operator.setSurname(
+                        operator.getSurname().substring(0, 1).toUpperCase() + operator.getSurname().substring(1));
 
                 Role role = new Role();
                 role.setName("ROLE_USER");
-        
+
                 roleRepository.save(role);
-        
+
                 List<Role> roles = new ArrayList<>();
                 roles.add(role);
 
@@ -68,8 +77,18 @@ public class OperatorService {
         return null;
     }
 
-    public Operator update(Long id, Operator operator){
-        if(operatorRepository.existsById(id)){
+    // ************ UPDATE OPERATOR ***********//
+    public Operator update(Long id, Operator operator) {
+
+        /*
+         * If the Id exists:
+         * Get the Operator by Id
+         * Set every field with the Operator passed by parameter.
+         * Encode the password.
+         * Save the updated Operator.
+         */
+
+        if (operatorRepository.existsById(id)) {
             Operator oldOp = operatorRepository.findById(id).get();
             oldOp.setName(operator.getName());
             oldOp.setSurname(operator.getSurname());
@@ -80,17 +99,25 @@ public class OperatorService {
             operatorRepository.save(oldOp);
             return oldOp;
         }
-        
+
         return null;
     }
 
-    public boolean deleteById(Long id){
-        if(operatorRepository.existsById(id)){
+    // ************ DELETE OPERATOR BY ID ***********//
+    public boolean deleteById(Long id) {
+
+        /*
+         * If the Id exists:
+         * Get the Operator by id and delete the roles.
+         * Finally, delete the Operator.
+         */
+
+        if (operatorRepository.existsById(id)) {
             Operator op = operatorRepository.findById(id).get();
 
             List<Role> roles = op.getRoles();
 
-            roles.forEach(role ->{
+            roles.forEach(role -> {
                 roleRepository.delete(role);
             });
 
@@ -100,15 +127,25 @@ public class OperatorService {
         return false;
     }
 
-    public Operator findByusername(String username){
-        if(operatorRepository.existsByUserName(username)){
+    // ************ FIND BY USERNAME ***********//
+    public Operator findByusername(String username) {
+        if (operatorRepository.existsByUserName(username)) {
             return operatorRepository.findByUserName(username);
         }
         return null;
     }
 
-    public Operator updateLastLoginDate(Operator operator){
-        if(operatorRepository.existsById(operator.getId())){
+    // ************ UPDATE LAST LOGIN DATE ***********//
+    public Operator updateLastLoginDate(Operator operator) {
+
+        /*
+         * If the Id exists:
+         * Get the operator by id.
+         * Set the Last Login Date to current time.
+         * Finally, save the updated Operator.
+         */
+
+        if (operatorRepository.existsById(operator.getId())) {
             Operator oldOp = operatorRepository.findById(operator.getId()).get();
 
             oldOp.setName(operator.getName());
@@ -124,8 +161,17 @@ public class OperatorService {
         return null;
     }
 
-    public Operator upgrade(Long id){
-        
+    // ************ UPGRADE OPERATOR TO ADMIN ***********//
+    public Operator upgrade(Long id) {
+
+        /*
+         * Get the Operator by Id.
+         * If the Operator doesnt have Admin Role we mark the flag as true.
+         * If the flag is false, we create a new Admin Role, save it. And add it to the
+         * Operator.
+         * Finally, we save the Operator.
+         */
+
         boolean flag = false;
 
         Operator oldOp = operatorRepository.findById(id).get();
@@ -137,16 +183,15 @@ public class OperatorService {
         oldOp.setStatus(oldOp.getStatus());
         oldOp.setLastLoginDate(oldOp.getLastLoginDate());
 
-
         List<Role> roles = oldOp.getRoles();
 
-        for(Role role : oldOp.getRoles()){
-            if(role.getName().toString().equals("ROLE_ADMIN")){
+        for (Role role : oldOp.getRoles()) {
+            if (role.getName().toString().equals("ROLE_ADMIN")) {
                 flag = true;
             }
         }
 
-        if(!flag){
+        if (!flag) {
             Role role = new Role();
             role.setName("ROLE_ADMIN");
             roleRepository.save(role);
@@ -163,8 +208,14 @@ public class OperatorService {
         return null;
     }
 
-    public Operator demote(Long id){
+    // ************ DEMOTE OPERATOR TO USER ***********//
+    public Operator demote(Long id) {
 
+        /*
+         * Find Operator by Id
+         * We look if the Operator has the Role Admin.
+         * If the role exists, we delete it.
+         */
 
         Operator oldOp = operatorRepository.findById(id).get();
 
@@ -175,9 +226,8 @@ public class OperatorService {
         oldOp.setStatus(oldOp.getStatus());
         oldOp.setLastLoginDate(oldOp.getLastLoginDate());
 
-
-        for(Role role : oldOp.getRoles()){
-            if(role.getName().toString().equals("ROLE_ADMIN")){
+        for (Role role : oldOp.getRoles()) {
+            if (role.getName().toString().equals("ROLE_ADMIN")) {
                 roleRepository.delete(role);
                 return oldOp;
             }
@@ -186,21 +236,27 @@ public class OperatorService {
         return null;
     }
 
-    public boolean checkRole(Operator operator, String roleName){
+    // ************ CHECK THE OPERATOR ROLE ***********//
+    public boolean checkRole(Operator operator, String roleName) {
+
+        /*
+         * Checks if the Operator has an specific role.
+         * Then returns true or false.
+         */
 
         boolean flag = false;
-        for(Role role : operator.getRoles()){
-            if(role.getName().toString().equals(roleName)){
-                flag= true;
+        for (Role role : operator.getRoles()) {
+            if (role.getName().toString().equals(roleName)) {
+                flag = true;
             }
         }
 
-        if(flag){
+        if (flag) {
             return true;
 
-        }else{
+        } else {
             return false;
         }
     }
-    
+
 }

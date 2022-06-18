@@ -12,8 +12,8 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig{
-    
+public class SecurityConfig {
+
     @Autowired
     private UserDetailsService uS;
 
@@ -21,35 +21,35 @@ public class SecurityConfig{
     private PasswordEncoder pE;
 
     @Autowired
-    public void configurerGlobal(AuthenticationManagerBuilder build) throws Exception{
+    public void configurerGlobal(AuthenticationManagerBuilder build) throws Exception {
         build.userDetailsService(uS).passwordEncoder(pE);
     }
 
     @Bean
-    CustomSuccessHandler successHandler(){
+    CustomSuccessHandler successHandler() {
         return new CustomSuccessHandler();
     }
 
     @Bean
-    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors()
-            .and()
-            .csrf().disable()
-            .authorizeRequests()
-            .antMatchers("/operator/delete/**")
-                .hasAnyRole("ADMIN","SUPER_ADMIN")
-            .antMatchers("/operator/edit/**")
-                .hasAnyRole("ADMIN","SUPER_ADMIN","USER")
-            .antMatchers("/operator/list","/")
-                .hasAnyRole("USER","ADMIN","SUPER_ADMIN")
-            .and()
+                .cors()
+                .and()
+                .csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/operator/delete/**")
+                .hasAnyRole("ADMIN", "SUPER_ADMIN")
+                .antMatchers("/operator/edit/**")
+                .hasAnyRole("ADMIN", "SUPER_ADMIN", "USER")
+                .antMatchers("/operator/list", "/")
+                .hasAnyRole("USER", "ADMIN", "SUPER_ADMIN")
+                .and()
                 .formLogin()
                 .loginPage("/login")
                 .permitAll()
-                //.defaultSuccessUrl("/operator/list")
+                // .defaultSuccessUrl("/operator/list")
                 .successHandler(successHandler());
-            ;
+        ;
 
         return http.build();
     }

@@ -19,7 +19,10 @@
 
 <body>
     <nav class="bg-secondary nav d-flex justify-content-around">
-        <b class="mt-2 mb-2" sec:authentication="name"></span></b>
+        <div class="mt-2 mb-2">
+            User: <b  sec:authentication="name"></b>
+        </div>
+        
         <form th:action="@{/logout}" method="POST">
             <input class="btn btn-primary btn-block mt-2 mb-2" type="submit" value="Sign Out">
         </form>
