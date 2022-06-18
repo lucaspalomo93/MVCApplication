@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -74,13 +75,21 @@
 
     </div>
 
-    <div class="d-flex justify-content-center">
-        <a class="btn btn-success text-decoration-none text-dark font-weight-bold mb-4" th:href="@{/operator/upgrade/} + ${operator.id}">Upgrade</a>
+    <div class="d-flex justify-content-left container mt-4">
+        <a  sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER_ADMIN')" class="btn btn-success text-decoration-none text-dark font-weight-bold mb-4" th:href="@{/operator/upgrade/} + ${operator.id}">Upgrade</a>
+    </div>
+
+    <div class="d-flex justify-content-left container mt-1">
+        <td sec:authorize="hasRole('ROLE_SUPER_ADMIN')"><a class="btn btn-secondary text-decoration-none text-dark font-weight-bold" th:href="@{/operator/demote/} + ${operator.id}">Demote</a></td>
     </div>
 
     <div class="d-flex justify-content-center">
         <input type="submit" class="btn btn-primary btn-block mb-3" name="save" value="Confirm Changes">
     </div>
+
+    
+        
+    
 
     </form>
     <div class="text-center">

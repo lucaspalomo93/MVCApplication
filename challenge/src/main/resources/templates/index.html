@@ -31,35 +31,56 @@
     <table class="table">
         <thead>
             <tr>
+                <th scope="col">Username</th>
                 <th scope="col">Name</th>
                 <th scope="col">Surname</th>
-                <th scope="col">Username</th>
                 <th scope="col">Status</th>
                 <th scope="col">Creation Date</th>
                 <th scope="col">Last Login Date</th>
-                <th sec:authorize="hasRole('ROLE_ADMIN')">Edit</th>
                 <th sec:authorize="hasRole('ROLE_ADMIN')">Delete</th>
-                <th>Upgrade</th>
-                <th sec:authorize="hasRole('ROLE_ADMIN')">Demote</th>
+
             </tr>
         </thead>
         <tbody>
             <tr th:each="operator : ${operators}">
-                <!-- <td><a class="text-decoration-none" th:text="${operator.name}" th:href="@{/operator/edit} + '/' + ${operator.id}"></a ></td></td>-->   
+                <td><a class="text-decoration-none" th:text="${operator.userName}" th:href="@{/operator/edit} + '/' + ${operator.id}"></a></td>
                 <td th:text="${operator.name}"></td>
                 <td th:text="${operator.surname}"></td>
-                <td th:text="${operator.userName}"></td>
                 <td th:if="${operator.status == 1}" th:text="Active"></td>
                 <td th:if="${operator.status == 0}" th:text="Inactive"></td>
                 <td th:text="${#dates.format(operator.creationDate, 'dd/MM/yyyy HH:mm')}"></td>
-                <td th:text="${#dates.format(operator.lastLoginDate, 'dd/MM/yyyy HH:mm')}"></td>
-                <td sec:authorize="hasRole('ROLE_ADMIN')"><a class="btn btn-warning text-decoration-none text-dark font-weight-bold" th:href="@{/operator/edit} + '/' + ${operator.id}">Edit</a></td>
+                <td th:text="${#dates.format(operator.lastLoginDate, 'dd/MM/yyyy HH:mm')}"></td>                
                 <td sec:authorize="hasRole('ROLE_ADMIN')"><a class="btn btn-danger text-decoration-none text-dark font-weight-bold" th:href="@{/operator/delete/} + ${operator.id}">Delete</a></td>
-                <td><a class="btn btn-success text-decoration-none text-dark font-weight-bold" th:href="@{/operator/upgrade/} + ${operator.id}">Upgrade</a></td>
-                <td sec:authorize="hasRole('ROLE_ADMIN')"><a class="btn btn-secondary text-decoration-none text-dark font-weight-bold" th:href="@{/operator/demote/} + ${operator.id}">Demote</a></td>
             </tr>
         </tbody>
     </table>
+</div>
+
+<!--********************* FLASH ATTRIBUTES ******************-->
+<!-- ********************************************************** -->
+
+<div class="container d-flex justify-content-center text-success">
+    <p th:if="${upgraded != null}" th:text="'Operator ' + ${upgraded} + ' has been Upgraded to Admin, please Relog to see changes'"></p>
+</div>
+
+<div class="container d-flex justify-content-center text-success">
+    <p th:if="${alreadyUpgraded != null}" th:text="'Operator ' + ${alreadyUpgraded} + ' is already an Admin'"></p>
+</div>
+
+<div class="container d-flex justify-content-center text-danger">
+    <p th:if="${deletedUser != null}" th:text="'Operator ' + ${deletedUser} + ' has been removed'"></p>
+</div>
+
+<div class="container d-flex justify-content-center text-success">
+    <p th:if="${updated != null}" th:text="'Operator ' + ${updated} + ' has been Updated'"></p>
+</div>
+
+<div class="container d-flex justify-content-center text-danger">
+    <p th:if="${demoted != null}" th:text="'Operator ' + ${demoted} + ' has been Demoted'"></p>
+</div>
+
+<div class="container d-flex justify-content-center text-danger">
+    <p th:if="${alreadyDemoted != null}" th:text="'Operator ' + ${alreadyDemoted} + ' is already a User'"></p>
 </div>
 
 </html>

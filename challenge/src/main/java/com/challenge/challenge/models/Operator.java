@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -35,13 +36,16 @@ public class Operator {
     private Long id;
 
     @NotEmpty(message = "Name cannot be Empty")
+    @Pattern(regexp="^[A-Za-z]*$",message = "Cannot contain numbers")
     private String name;
 
     @NotEmpty(message = "Surname cannot be empty")
+    @Pattern(regexp="^[A-Za-z]*$",message = "Cannot contain numbers")
     private String surname;
 
     @NotEmpty(message = "Username cannot be empty")
     @Column(unique = true)
+    @Pattern(regexp = "^[A-Za-z]\\w{1,29}$", message = "Must start with a letter and have at least 2 character")
     private String userName;
 
     @NotEmpty(message = "Password cannot be empty")
