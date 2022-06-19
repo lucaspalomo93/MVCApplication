@@ -63,27 +63,39 @@
 <!-- ********************************************************** -->
 
 <div class="container d-flex justify-content-center text-success">
-    <p th:if="${upgraded != null}" th:text="'Operator ' + ${upgraded} + ' has been Upgraded to Admin, please Relog to see changes'"></p>
+    <div th:if="${upgraded != null}" class="alert alert-success" role="alert">
+         <p th:text="'Operator ' + ${upgraded} + ' has been Upgraded to Admin, please Relog to see changes'"></p>
+    </div>
 </div>
 
 <div class="container d-flex justify-content-center text-success">
-    <p th:if="${alreadyUpgraded != null}" th:text="'Operator ' + ${alreadyUpgraded} + ' is already an Admin'"></p>
+    <div th:if="${alreadyUpgraded != null}" class="alert alert-success" role="alert">
+        <p th:text="'Operator ' + ${alreadyUpgraded} + ' is already an Admin'"></p>
+   </div>
 </div>
 
 <div class="container d-flex justify-content-center text-danger">
-    <p th:if="${deletedUser != null}" th:text="'Operator ' + ${deletedUser} + ' has been removed'"></p>
+    <div th:if="${deletedUser != null}" class="alert alert-danger" role="alert">
+        <p th:text="'Operator ' + ${deletedUser} + ' has been removed'"></p>
+   </div>
 </div>
 
 <div class="container d-flex justify-content-center text-success">
-    <p th:if="${updated != null}" th:text="'Operator ' + ${updated} + ' has been Updated'"></p>
+    <div th:if="${updated != null}" class="alert alert-success" role="alert">
+        <p th:text="'Operator ' + ${updated} + ' has been Updated'"></p>
+   </div>
+</div>
+
+<div class="container d-flex justify-content-center text-warning">
+    <div th:if="${demoted != null}" class="alert alert-warning" role="alert">
+        <p th:text="'Operator ' + ${demoted} + ' has been Demoted'"></p>
+   </div>
 </div>
 
 <div class="container d-flex justify-content-center text-danger">
-    <p th:if="${demoted != null}" th:text="'Operator ' + ${demoted} + ' has been Demoted'"></p>
-</div>
-
-<div class="container d-flex justify-content-center text-danger">
-    <p th:if="${alreadyDemoted != null}" th:text="'Operator ' + ${alreadyDemoted} + ' is already a User'"></p>
+    <div th:if="${alreadyDemoted != null}" class="alert alert-warning" role="alert">
+        <p th:text="'Operator ' + ${alreadyDemoted} + ' is already a User'"></p>
+   </div>
 </div>
 
 </html>
