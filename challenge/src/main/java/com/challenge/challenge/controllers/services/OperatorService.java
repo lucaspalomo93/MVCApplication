@@ -90,8 +90,8 @@ public class OperatorService {
 
         if (operatorRepository.existsById(id)) {
             Operator oldOp = operatorRepository.findById(id).get();
-            oldOp.setName(operator.getName());
-            oldOp.setSurname(operator.getSurname());
+            oldOp.setName(operator.getName().substring(0, 1).toUpperCase() + operator.getName().substring(1));
+            oldOp.setSurname(operator.getSurname().substring(0, 1).toUpperCase() + operator.getSurname().substring(1));
             oldOp.setUserName(operator.getUserName());
             oldOp.setPassword(passwordEncoder.encode(operator.getPassword()));
             oldOp.setStatus(operator.getStatus());
@@ -166,7 +166,7 @@ public class OperatorService {
 
         /*
          * Get the Operator by Id.
-         * If the Operator doesnt have Admin Role we mark the flag as true.
+         * If the Operator doesnt have Admin Role we mark the flag as false.
          * If the flag is false, we create a new Admin Role, save it. And add it to the
          * Operator.
          * Finally, we save the Operator.
