@@ -34,8 +34,13 @@ public class OperatorController {
     @GetMapping({ "/list", "/" })
     public String listAll(Model model, @AuthenticationPrincipal User user) {
 
-        List<Operator> allOperators = operatorService.findAll();
+        /*
+         * Create a list of Operators.
+         * Call the service to filter the list without the Super Admin.
+         * Return the list to the view.
+         */
 
+        List<Operator> allOperators = operatorService.findAll();
         List<Operator> operators = displayService.showAllWithoutSuperAdmin(allOperators);
 
         model.addAttribute("user", user);
@@ -52,6 +57,12 @@ public class OperatorController {
 
     @PostMapping("/save")
     public String save(@Valid Operator operator, Errors errors, RedirectAttributes redirectAttributes) {
+
+        /*
+         * If has herrors returns the register page.
+         * Else, saves the new Operator and redirects to Home page.
+         */
+
         if (errors.hasErrors()) {
             return "/register";
         }
@@ -69,6 +80,12 @@ public class OperatorController {
     }
 
     @PostMapping("/update")
+
+    /*
+     * If has errors returns the edit page.
+     * Else, update the Operator and redirect to Home page.
+     */
+
     public String update(@Valid Operator operator, Errors errors, RedirectAttributes redirectAttributes) {
         if (errors.hasErrors()) {
             return "edit";
@@ -91,6 +108,13 @@ public class OperatorController {
     @GetMapping("/upgrade/{id}")
     public String upgrade(@PathVariable Long id, RedirectAttributes redirectAttributes) {
 
+        /*
+         * First we get the Operator by ID.
+         * Then we Check the Role of the Operator using the service.
+         * We send a Flash Attribute or another depending if it is Upgraded or it was Already Upgraded.
+         * Finally, we call the Upgrade service.
+         */
+
         Operator op = operatorService.findById(id).get();
         String username = op.getUserName();
 
@@ -107,6 +131,14 @@ public class OperatorController {
 
     @GetMapping("/demote/{id}")
     public String downgrade(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+
+        /*
+         * Get the Operator by ID.
+         * If the Operator has the Admin Role, sends a new Flash Attribute.
+         * Else, we send an Already Demoted Flash Attribute.
+         * Finally, we call the Demote service.
+         */
+
         Operator op = operatorService.findById(id).get();
 
         if (operatorService.checkRole(op, "ROLE_ADMIN")) {
