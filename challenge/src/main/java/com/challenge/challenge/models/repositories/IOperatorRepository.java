@@ -11,4 +11,5 @@ public interface IOperatorRepository extends JpaRepository<Operator, Long> {
     public Operator findByUserName(String username);
 
     public boolean existsByUserName(String username);
+    
 }
