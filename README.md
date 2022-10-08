@@ -1,4 +1,4 @@
-# Proyecto MVC
+# MVC
 
 - Una tabla de operadores con un CRUD en un MVC.
 
